@@ -1,0 +1,80 @@
+import java.awt.event.*;
+import javax.swing.*;
+
+public class CurrencyConverter extends JFrame implements ActionListener {
+    JComboBox<String> fromBox, toBox;
+    JTextField inputField, resultField;
+    JButton convertButton;
+
+    String[] currencies = { "USD", "EUR", "INR", "GBP" };
+
+    // Example static rates (1 USD to others)
+    double[][] rates = {
+        {1.0, 0.85, 83.2, 0.75},   // USD
+        {1.18, 1.0, 98.0, 0.88},   // EUR
+        {0.012, 0.0102, 1.0, 0.0089}, // INR
+        {1.33, 1.13, 112.0, 1.0}   // GBP
+    };
+
+    public CurrencyConverter() {
+        setTitle("Currency Converter");
+        setSize(400, 250);
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JLabel fromLabel = new JLabel("From:");
+        fromLabel.setBounds(30, 30, 50, 25);
+        add(fromLabel);
+
+        fromBox = new JComboBox<>(currencies);
+        fromBox.setBounds(90, 30, 100, 25);
+        add(fromBox);
+
+        JLabel toLabel = new JLabel("To:");
+        toLabel.setBounds(200, 30, 30, 25);
+        add(toLabel);
+
+        toBox = new JComboBox<>(currencies);
+        toBox.setBounds(230, 30, 100, 25);
+        add(toBox);
+
+        JLabel amountLabel = new JLabel("Amount:");
+        amountLabel.setBounds(30, 70, 60, 25);
+        add(amountLabel);
+
+        inputField = new JTextField();
+        inputField.setBounds(90, 70, 240, 25);
+        add(inputField);
+
+        convertButton = new JButton("Convert");
+        convertButton.setBounds(130, 110, 120, 30);
+        convertButton.addActionListener(this);
+        add(convertButton);
+
+        resultField = new JTextField();
+        resultField.setBounds(90, 160, 240, 25);
+        resultField.setEditable(false);
+        add(resultField);
+
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        try {
+            double amount = Double.parseDouble(inputField.getText());
+            int fromIndex = fromBox.getSelectedIndex();
+            int toIndex = toBox.getSelectedIndex();
+
+            double rate = rates[fromIndex][toIndex];
+            double result = amount * rate;
+
+            resultField.setText(String.format("%.2f", result));
+        } catch (NumberFormatException ex) {
+            resultField.setText("Invalid amount.");
+        }
+    }
+
+    public static void main(String[] args) {
+        new CurrencyConverter();
+    }
+}
